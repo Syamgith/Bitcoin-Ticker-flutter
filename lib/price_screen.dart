@@ -14,22 +14,24 @@ class PriceScreen extends StatefulWidget {
 class _PriceScreenState extends State<PriceScreen> {
   CoinData coinData = CoinData();
   String selectedCurrency = 'INR';
-  var bExchangeData;
-  var eExchangeData;
-  var lExchangeData;
+  var rates;
+
   double bTCRate = 0;
   double eTHRate = 0;
   double lTCRate = 0;
 
   void UiChange() async {
-    bExchangeData = await coinData.getExchangeRate('BTC', selectedCurrency);
-    eExchangeData = await coinData.getExchangeRate('ETH', selectedCurrency);
-    lExchangeData = await coinData.getExchangeRate('LTC', selectedCurrency);
-    setState(() {
-      bTCRate = bExchangeData['rate'];
-      eTHRate = eExchangeData['rate'];
-      lTCRate = lExchangeData['rate'];
-    });
+    rates = await coinData.getExchangeRate(selectedCurrency);
+
+    try {
+      setState(() {
+        bTCRate = rates['BTC'];
+        eTHRate = rates['ETH'];
+        lTCRate = rates['LTC'];
+      });
+    } catch (e) {
+      return;
+    }
   }
 
   DropdownButton<String> androidDropDown() {
