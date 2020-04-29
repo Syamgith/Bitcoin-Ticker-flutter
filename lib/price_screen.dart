@@ -15,7 +15,7 @@ class _PriceScreenState extends State<PriceScreen> {
   CoinData coinData = CoinData();
   String selectedCurrency = 'INR';
   Map<String, double> ratesMap = {};
-  bool isWaiting = false;
+  bool isWaiting = true;
 
   void getRates() async {
     isWaiting = true;
@@ -88,7 +88,7 @@ class _PriceScreenState extends State<PriceScreen> {
               height: 150.0,
               alignment: Alignment.center,
               padding: EdgeInsets.only(bottom: 30.0),
-              color: Colors.lightBlue,
+              color: Color(0xff030304),
               child: Platform.isIOS ? iOSPicker() : androidDropDown()),
         ],
       ),
