@@ -46,7 +46,7 @@ class CoinData {
         double rate = decodedBody['rate'];
         criptoPrices[currency1] = rate;
       } else {
-        print(response.statusCode);
+        print('failed ${response.statusCode}');
         return;
       }
     }

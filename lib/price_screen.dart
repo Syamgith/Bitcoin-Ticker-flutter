@@ -14,20 +14,18 @@ class PriceScreen extends StatefulWidget {
 class _PriceScreenState extends State<PriceScreen> {
   CoinData coinData = CoinData();
   String selectedCurrency = 'INR';
-  var rates;
+  Map<String, double> ratesMap = {};
+  bool isWaiting = false;
 
-  double bTCRate = 0;
-  double eTHRate = 0;
-  double lTCRate = 0;
-
-  void UiChange() async {
-    rates = await coinData.getExchangeRate(selectedCurrency);
-
+  void getRates() async {
+    isWaiting = true;
     try {
+      var rates = await coinData.getExchangeRate(selectedCurrency);
       setState(() {
-        bTCRate = rates['BTC'];
-        eTHRate = rates['ETH'];
-        lTCRate = rates['LTC'];
+        if (rates != null) {
+          isWaiting = false;
+          ratesMap = rates;
+        }
       });
     } catch (e) {
       return;
@@ -45,7 +43,7 @@ class _PriceScreenState extends State<PriceScreen> {
         onChanged: (value) {
           setState(() {
             selectedCurrency = value;
-            UiChange();
+            getRates();
           });
         });
   }
@@ -59,7 +57,7 @@ class _PriceScreenState extends State<PriceScreen> {
       itemExtent: 32.0,
       onSelectedItemChanged: (selectedIndex) {
         selectedCurrency = currenciesList[selectedIndex];
-        UiChange();
+        getRates();
       },
       children: items,
     );
@@ -69,7 +67,7 @@ class _PriceScreenState extends State<PriceScreen> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    UiChange();
+    //getRates();
   }
 
   @override
@@ -84,26 +82,7 @@ class _PriceScreenState extends State<PriceScreen> {
         children: <Widget>[
           Padding(
             padding: EdgeInsets.fromLTRB(18.0, 18.0, 18.0, 0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: <Widget>[
-                CardNew(
-                  currecyRate: bTCRate,
-                  selectedCurrency: selectedCurrency,
-                  currency1: 'BTC',
-                ),
-                CardNew(
-                  currecyRate: eTHRate,
-                  selectedCurrency: selectedCurrency,
-                  currency1: 'ETH',
-                ),
-                CardNew(
-                  currecyRate: lTCRate,
-                  selectedCurrency: selectedCurrency,
-                  currency1: 'LTC',
-                )
-              ],
-            ),
+            child: buildColumn(),
           ),
           Container(
               height: 150.0,
@@ -113,6 +92,21 @@ class _PriceScreenState extends State<PriceScreen> {
               child: Platform.isIOS ? iOSPicker() : androidDropDown()),
         ],
       ),
+    );
+  }
+
+  Column buildColumn() {
+    List<CardNew> cardnewlists = [];
+    for (String currency1 in cryptoList) {
+      cardnewlists.add(CardNew(
+          currecyRate: isWaiting ? 0.0 : ratesMap[currency1],
+          selectedCurrency: selectedCurrency,
+          currency1: currency1));
+    }
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: cardnewlists,
     );
   }
 }
