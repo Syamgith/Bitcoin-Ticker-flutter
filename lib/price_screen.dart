@@ -1,5 +1,6 @@
 import 'dart:io' show Platform;
 
+import 'package:bitcoin_ticker/network_helper.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -11,7 +12,17 @@ class PriceScreen extends StatefulWidget {
 }
 
 class _PriceScreenState extends State<PriceScreen> {
+  NetworkHelper networkHelper = NetworkHelper();
   String selectedCurrency = 'INR';
+  var exchangeData;
+  double currecyRate;
+
+  void UiChange() async {
+    exchangeData = await networkHelper.getExchangeRate(selectedCurrency);
+    setState(() {
+      currecyRate = exchangeData['rate'];
+    });
+  }
 
   DropdownButton<String> androidDropDown() {
     List<DropdownMenuItem<String>> items = [];
@@ -24,6 +35,7 @@ class _PriceScreenState extends State<PriceScreen> {
         onChanged: (value) {
           setState(() {
             selectedCurrency = value;
+            UiChange();
           });
         });
   }
@@ -61,7 +73,7 @@ class _PriceScreenState extends State<PriceScreen> {
               child: Padding(
                 padding: EdgeInsets.symmetric(vertical: 15.0, horizontal: 28.0),
                 child: Text(
-                  '1 BTC = ? USD',
+                  '1 BTC = $currecyRate $selectedCurrency',
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     fontSize: 20.0,
