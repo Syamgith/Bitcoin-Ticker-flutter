@@ -1,9 +1,9 @@
 import 'dart:io' show Platform;
 
-import 'package:bitcoin_ticker/network_helper.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+import 'card_new_widget.dart';
 import 'coin_data.dart';
 
 class PriceScreen extends StatefulWidget {
@@ -12,15 +12,23 @@ class PriceScreen extends StatefulWidget {
 }
 
 class _PriceScreenState extends State<PriceScreen> {
-  NetworkHelper networkHelper = NetworkHelper();
+  CoinData coinData = CoinData();
   String selectedCurrency = 'INR';
-  var exchangeData;
-  double currecyRate;
+  var bExchangeData;
+  var eExchangeData;
+  var lExchangeData;
+  double bTCRate = 0;
+  double eTHRate = 0;
+  double lTCRate = 0;
 
   void UiChange() async {
-    exchangeData = await networkHelper.getExchangeRate(selectedCurrency);
+    bExchangeData = await coinData.getExchangeRate('BTC', selectedCurrency);
+    eExchangeData = await coinData.getExchangeRate('ETH', selectedCurrency);
+    lExchangeData = await coinData.getExchangeRate('LTC', selectedCurrency);
     setState(() {
-      currecyRate = exchangeData['rate'];
+      bTCRate = bExchangeData['rate'];
+      eTHRate = eExchangeData['rate'];
+      lTCRate = lExchangeData['rate'];
     });
   }
 
@@ -71,23 +79,24 @@ class _PriceScreenState extends State<PriceScreen> {
         children: <Widget>[
           Padding(
             padding: EdgeInsets.fromLTRB(18.0, 18.0, 18.0, 0),
-            child: Card(
-              color: Colors.lightBlueAccent,
-              elevation: 5.0,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10.0),
-              ),
-              child: Padding(
-                padding: EdgeInsets.symmetric(vertical: 15.0, horizontal: 28.0),
-                child: Text(
-                  '1 BTC = $currecyRate $selectedCurrency',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontSize: 20.0,
-                    color: Colors.white,
-                  ),
+            child: Column(
+              children: <Widget>[
+                CardNew(
+                  currecyRate: bTCRate,
+                  selectedCurrency: selectedCurrency,
+                  currency1: 'BTC',
                 ),
-              ),
+                CardNew(
+                  currecyRate: eTHRate,
+                  selectedCurrency: selectedCurrency,
+                  currency1: 'ETH',
+                ),
+                CardNew(
+                  currecyRate: lTCRate,
+                  selectedCurrency: selectedCurrency,
+                  currency1: 'LTC',
+                )
+              ],
             ),
           ),
           Container(
