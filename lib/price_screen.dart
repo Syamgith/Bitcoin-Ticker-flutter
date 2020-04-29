@@ -55,7 +55,10 @@ class _PriceScreenState extends State<PriceScreen> {
     }
     return CupertinoPicker(
       itemExtent: 32.0,
-      onSelectedItemChanged: (selectedIndex) {},
+      onSelectedItemChanged: (selectedIndex) {
+        selectedCurrency = currenciesList[selectedIndex];
+        UiChange();
+      },
       children: items,
     );
   }
@@ -80,6 +83,7 @@ class _PriceScreenState extends State<PriceScreen> {
           Padding(
             padding: EdgeInsets.fromLTRB(18.0, 18.0, 18.0, 0),
             child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
               children: <Widget>[
                 CardNew(
                   currecyRate: bTCRate,
