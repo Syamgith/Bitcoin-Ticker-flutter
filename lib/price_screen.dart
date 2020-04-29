@@ -14,7 +14,7 @@ class PriceScreen extends StatefulWidget {
 class _PriceScreenState extends State<PriceScreen> {
   CoinData coinData = CoinData();
   String selectedCurrency = 'INR';
-  Map<String, double> ratesMap = {};
+  Map<String, String> ratesMap = {};
   bool isWaiting = true;
 
   void getRates() async {
@@ -67,7 +67,7 @@ class _PriceScreenState extends State<PriceScreen> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    //getRates();
+    getRates();
   }
 
   @override
@@ -99,7 +99,7 @@ class _PriceScreenState extends State<PriceScreen> {
     List<CardNew> cardnewlists = [];
     for (String currency1 in cryptoList) {
       cardnewlists.add(CardNew(
-          currecyRate: isWaiting ? 0.0 : ratesMap[currency1],
+          currecyRate: isWaiting ? '?' : ratesMap[currency1],
           selectedCurrency: selectedCurrency,
           currency1: currency1));
     }

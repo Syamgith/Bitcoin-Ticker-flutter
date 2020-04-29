@@ -37,14 +37,14 @@ const List<String> cryptoList = [
 
 class CoinData {
   Future getExchangeRate(String currency2) async {
-    Map<String, double> criptoPrices = {};
+    Map<String, String> criptoPrices = {};
     for (String currency1 in cryptoList) {
       http.Response response =
           await http.get('$apiurl/$currency1/$currency2?apikey=$apikey');
       if (response.statusCode == 200) {
         var decodedBody = jsonDecode(response.body);
         double rate = decodedBody['rate'];
-        criptoPrices[currency1] = rate;
+        criptoPrices[currency1] = rate.toStringAsFixed(3);
       } else {
         print('failed ${response.statusCode}');
         return;

@@ -7,7 +7,7 @@ class CardNew extends StatelessWidget {
       @required this.selectedCurrency,
       @required this.currency1});
 
-  final double currecyRate;
+  final String currecyRate;
   final String selectedCurrency;
   final String currency1;
 
@@ -22,7 +22,7 @@ class CardNew extends StatelessWidget {
       child: Padding(
         padding: EdgeInsets.symmetric(vertical: 15.0, horizontal: 28.0),
         child: Text(
-          '1 $currency1 = ${currecyRate.toStringAsFixed(3)} $selectedCurrency',
+          '1 $currency1 = $currecyRate $selectedCurrency',
           textAlign: TextAlign.center,
           style: TextStyle(
             fontSize: 20.0,
